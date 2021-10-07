@@ -31,14 +31,16 @@ class MyHomePage extends StatefulWidget {
 
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _location = "no data";
+  String houi = "nodata";
   double ido = 00;
   double keido = 00;
+  double targetido = 0;
+  double targetkeido = 0;
 
   Future<void> getLocation()async {
     //現在の位置を返す
     Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high);
     //北緯がプラス。南緯がマイナス。実際に使用するのは北緯
     print("緯度:" + position.latitude.toString());
     //東緯がプラス。西緯がマイナス。実際に使用するのは東緯
@@ -49,6 +51,21 @@ class _MyHomePageState extends State<MyHomePage> {
       ido = position.latitude.toDouble();
       keido = position.longitude.toDouble();
     });
+
+    //テストデーター
+    targetido = 35.587789665703845;
+    targetkeido = 139.67458598778808;
+
+    //現在地からターゲットのいる場所の方位
+    if (targetido < ido && targetkeido > keido) {
+      houi = "南西";
+    } else if (targetido > ido && targetkeido > keido) {
+      houi = "北西";
+    } else if (targetido < ido && targetkeido < keido) {
+      houi = "南東";
+    } else if (targetido > ido && targetkeido < keido) {
+      houi = "北東";
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -61,6 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Text(ido.toString()),
             Text(keido.toString()),
+            Text(houi),
           ],
         ),
       ),
